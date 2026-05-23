@@ -1,15 +1,24 @@
-const { ObjectId } = await import('mongodb');
+// 1️⃣ Get ObjectId from MongoDB
+        const { ObjectId } = await import('mongodb');
 
 app.delete('/user/:id', async (req, res) => {
     try {
-        const result = await db.collection('users').deleteOne({
-            _id: new ObjectId(req.params.id)
-        });
 
+        // 2️⃣ Take id from request
+        const id = req.params.id;
+
+        // 3️⃣ CREATE QUERY (what to delete)
+        const query = { _id: new ObjectId(id) };
+
+        // 4️⃣ RUN QUERY
+        const result = await db.collection('users').deleteOne(query);
+
+        // 5️⃣ CHECK RESULT
         if (result.deletedCount === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        // 6️⃣ RESPONSE
         res.json({
             message: 'User deleted successfully',
             deletedCount: result.deletedCount
@@ -19,15 +28,3 @@ app.delete('/user/:id', async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
-
-
-
-Note: 
-result object has these properites.
-
-{
-  "acknowledged": true,
-  "deletedCount": 1
-}
-
-deletedCount means here only one id is matched this one.

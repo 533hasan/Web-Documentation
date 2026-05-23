@@ -1,6 +1,15 @@
 app.get('/users', async (req, res) => {
     try {
-        const users = await db.collection('users').find().toArray();
+
+        // 1️⃣ CREATE QUERY (empty = get all documents)
+        const query = {};
+
+        // 2️⃣ RUN QUERY
+        const users = await db.collection('users')
+            .find(query)
+            .toArray();
+
+        // 3️⃣ RESPONSE
         res.json(users);
 
     } catch (error) {

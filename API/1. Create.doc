@@ -1,8 +1,17 @@
 app.post('/create-user', async (req, res) => {
     try {
+
+        // 1️⃣ GET DATA FROM REQUEST BODY
         const user = req.body;
+
+        // 2️⃣ RUN INSERT QUERY
         const result = await db.collection('users').insertOne(user);
-        res.json({message: 'user created});
+
+        // 3️⃣ RESPONSE
+        res.json({
+            message: 'User created successfully',
+            insertedId: result.insertedId
+        });
 
     } catch (error) {
         res.status(500).json({ message: error.message });

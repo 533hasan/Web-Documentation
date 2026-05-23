@@ -2,16 +2,22 @@ const { ObjectId } = await import('mongodb');
 
 app.get('/user/:id', async (req, res) => {
     try {
+
+        // 1️⃣ TAKE ID FROM URL
         const id = req.params.id;
 
-        const user = await db.collection('users').findOne({
-            _id: new ObjectId(id)
-        });
+        // 2️⃣ CREATE QUERY (what to search)
+        const query = { _id: new ObjectId(id) };
 
+        // 3️⃣ RUN QUERY
+        const user = await db.collection('users').findOne(query);
+
+        // 4️⃣ CHECK RESULT
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        // 5️⃣ RESPONSE
         res.json(user);
 
     } catch (error) {

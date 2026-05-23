@@ -2,13 +2,31 @@ const { ObjectId } = await import('mongodb');
 
 app.patch('/user/:id', async (req, res) => {
     try {
-        const result = await db.collection('users').updateOne(
-            { _id: new ObjectId(req.params.id) },
-            { $set: req.body }
-        );
 
-        res.json(result);
-        
+        // 1️⃣ Take id from URL
+        const id = req.params.id;
+
+        // 2️⃣ CREATE QUERY (which document to update)
+        const query = { _id: new ObjectId(id) };
+
+        // 3️⃣ CREATE UPDATE DATA (what to change)
+        const updateData = { $set: req.body };
+
+        // 4️⃣ RUN QUERY
+        const result = await db.collection('users').updateOne(query, updateData);
+
+        // 5️⃣ CHECK RESULT
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // 6️⃣ RESPONSE
+        res.json({
+            message: 'User updated successfully',
+            matchedCount: result.matchedCount,
+            modifiedCount: result.modifiedCount
+        });
+
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
