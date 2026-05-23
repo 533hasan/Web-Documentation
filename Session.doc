@@ -1,0 +1,27 @@
+
+"use client";
+
+import { authClient } from "@/lib/auth-client";
+
+export default function ProfilePage() {
+    const { data: session, isPending } = authClient.useSession();
+    if (isPending) {
+        return <p>Loading...</p>;
+    }
+    if (!session) {
+        return (
+            <div>
+                <h1>Please Login</h1>
+                <p>You are not authenticated.</p>
+            </div>
+        );
+    }
+
+    return (
+        <div>
+            <h1>Welcome, {session?.user?.name}</h1>
+            <p>Email: {session?.user?.email}</p>
+            <p>User ID: {session?.user?.id}</p>
+        </div>
+    );
+}

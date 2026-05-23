@@ -1,0 +1,50 @@
+"use client";
+
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+
+export default function LoginPage() {
+    const router = useRouter();
+    const handleLogin = async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.currentTarget);
+        const loginData = Object.fromEntries(formData.entries());
+
+        const { data, error } = await authClient.signIn.email({
+            email: loginData.email,
+            password: loginData.password,
+        });
+
+        if (error) {
+            toast.error("Login Failed");
+            return;
+        }
+
+        toast.success("Login Successful");
+        router.push("/");
+    };
+
+    return (
+        <form onSubmit={handleLogin}>
+            <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                required
+            />
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                required
+            />
+
+            <button type="submit">
+                Login
+            </button>
+        </form>
+    );
+}

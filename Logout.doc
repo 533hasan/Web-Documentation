@@ -1,0 +1,27 @@
+"use client";
+
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+
+export default function Navbar() {
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        const { error } = await authClient.signOut();
+
+        if (error) {
+            toast.error("Logout Failed");
+            return;
+        }
+
+        toast.success("Logout Successful");
+        router.push("/login");
+    };
+
+    return (
+        <button onClick={handleLogout}>
+            Logout
+        </button>
+    );
+}

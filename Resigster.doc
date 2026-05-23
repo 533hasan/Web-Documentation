@@ -1,0 +1,41 @@
+
+For finding the user input need a function.
+
+"use client";
+
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+
+export default function RegisterPage() {
+    const router = useRouter();
+
+    const handleRegister = async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const registerData = Object.fromEntries(formData.entries());
+        
+        const { data, error } = await authClient.signUp.email({
+            name: registerData.name,
+            email: registerData.email,
+            password: registerData.password,
+        });
+        if (error) {
+            toast.error(error.message || "Registration failed");
+            return;
+        }
+        toast.success("Registration successful");
+        router.push("/");
+    };
+
+    return(
+        // rest of the code 
+    )
+}
+
+
+***
+For emailAndPassword authentication add this in auth.js
+ emailAndPassword: {    
+        enabled: true
+    } 
