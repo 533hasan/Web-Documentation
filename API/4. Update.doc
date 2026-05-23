@@ -1,0 +1,17 @@
+const { ObjectId } = await import('mongodb');
+
+app.patch('/user/:id', async (req, res) => {
+    try {
+        const result = await db.collection('users').updateOne(
+            { _id: new ObjectId(req.params.id) },
+            { $set: req.body }
+        );
+
+        res.json(result);
+        
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
