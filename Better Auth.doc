@@ -1,0 +1,49 @@
+1. install: npm install better-auth
+2. keep secret in .env: BETTER_AUTH_SECRET=
+3. src/lib/auth.js
+4. /app/api/auth/[...all]/route.js
+5. src/lib/auth-client.js
+6. install mongodb in frontend
+7. install mongo adapter: npm install @better-auth/mongo-adapter
+8. keep in .env file: MONGODB_URI: 
+
+
+Necessary code: 
+*** auth.js: 
+import { betterAuth } from "better-auth";
+import { MongoClient } from "mongodb";
+import { mongodbAdapter } from "better-auth/adapters/mongodb";
+
+const client = new MongoClient(process.env.MONGODB_URI);
+const db = client.db("database name like: mentoradb");
+
+export const auth = betterAuth({
+  database: mongodbAdapter(db, {
+    // Optional: if you don't provide a client, database transactions won't be enabled.
+    client
+  }),
+});
+
+
+*** route.js
+
+import { auth } from "@/lib/auth"; // path to your auth file
+import { toNextJsHandler } from "better-auth/next-js";
+export const { POST, GET } = toNextJsHandler(auth);
+
+
+*** auth-client.js
+
+import { createAuthClient } from "better-auth/react"
+export const authClient = createAuthClient({
+    /** The base URL of the server (optional if you're using the same domain) */
+    baseURL:process.env.BETTER_AUTH_URL
+})
+export const { signIn, signUp, useSession } = createAuthClient()
+
+
+*** .env
+NEXT_PUBLIC_API_URL(Backend url):http://localhost:8080
+BETTER_AUTH_URL(Frontend url): http://localhost:3000
+BETTER_AUTH_SECRET
+MONGODB_URI: 
